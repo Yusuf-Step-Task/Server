@@ -79,16 +79,23 @@ class Program
                     else if (processName == Command.PROCLIST)
                     {
                         Process[] processes = Process.GetProcesses();
-                        using var bw = new BinaryWriter(
-                            clientStream,
-                            Encoding.UTF8,
-                            leaveOpen: true
-                        );
+                        using var bw = new BinaryWriter( clientStream , Encoding.UTF8 , leaveOpen: true );
                         bw.Write(processes.Length);
                         foreach (Process p in processes)
                         {
-                            bw.Write(p.Id);
-                            bw.Write(p.ProcessName);
+                            try
+                            {
+                                bw.Write(p.Id);
+                                bw.Write(p.ProcessName);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            finally
+                            {
+                                p.Dispose();
+                            }
                         }
                         bw.Flush();
                         Console.WriteLine("Process list sent to client");

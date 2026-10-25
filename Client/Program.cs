@@ -12,13 +12,6 @@ public class Program
         var serverStream = client.GetStream();
         var br = new BinaryReader(serverStream);
         var bw = new BinaryWriter(serverStream);
-        Task.Run(() =>
-        {
-            while (true)
-            {
-                Console.WriteLine(br.ReadString());
-            }
-        });
         Console.ReadKey();
         while (true)
         {
@@ -44,11 +37,12 @@ public class Program
             }
         }
         int count = br.ReadInt32();
+        Console.WriteLine( $"{"ID",-10} {"Process Name",-30}" );
         for (int i = 0; i < count; i++)
         {
             int id = br.ReadInt32();
             string name = br.ReadString();
-            Console.WriteLine($"Id: {id} - Name: {name}");
+            Console.WriteLine($"{id,-10} {name,-30}");
         }
 
     }
